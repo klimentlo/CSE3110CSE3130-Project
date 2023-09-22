@@ -12,6 +12,32 @@ date:2023/09/20
 
 
 ### -- INPUTS
+def askHero(DHEROS, MHEROS):
+    '''
+    asks the user what hero data they want
+    :return: (str)
+    '''
+    reask = True
+    while reask == True:
+        try:
+            hero = input("What is the superhero ID? ")
+            hero = hero.upper() # uppercases the letter just in case they didn't
+            if hero[0] == "M":
+                hero = hero[1:]
+                print("what")
+                reask = binarySearch(MHEROS, hero)
+                print(reask)
+            elif hero[0] == "D":
+                hero = hero[1:]
+                reask = binarySearch(DHEROS, hero)
+                print("nice")
+            else:
+                print("Entry is invalid! ")
+        except IndexError:
+            print("Entry is invalid! ")
+
+    return
+
 
 ### -- PROCESSING
 def sortFranchise(LIST):
@@ -42,25 +68,6 @@ def getRawData(fileName):
 # rawArr is a 2D arrays holding all the Superhero data
 # headers is a variable that holds the List of all the column headers.
 
-def binarySearch (LIST, VALUE): #Iterative
-    '''
-    Search for a value within a list
-    :param LIST: list(int)
-    :param VALUE: (int)
-    :return: (bool)
-    '''
-
-    start_index = 0
-    end_index = len(LIST) - 1
-    while start_index <= end_index:
-        midpoint_index = (start_index + end_index) // 2
-        if LIST[midpoint_index] == VALUE:
-            return True
-        elif VALUE > LIST[midpoint_index]:
-            start_index = midpoint_index + 1
-        else:
-            end_index = midpoint_index
-    return False
 
 def insertionSort(LIST):
     '''
@@ -78,6 +85,26 @@ def insertionSort(LIST):
         LIST[HIGHEST_SORTED_INDEX + 1] = UNSORTED_VALUE
 
 
+def binarySearch(LIST, VALUE):  # Iterative
+    '''
+    Search for a value within a list
+    :param LIST: array (the List of values coming in is going to either be only D or only M)
+    :param VALUE: int (ex. 324)
+    :return: (bool)
+    '''
+
+    start_index = 0
+    end_index = len(LIST) - 1
+    while start_index <= end_index:
+        midpoint_index = (start_index + end_index) // 2
+        if LIST[midpoint_index][0][1:] == VALUE: # if the numbers behind the
+            return True
+        elif VALUE > LIST[midpoint_index][0][1:]:
+            start_index = midpoint_index + 1
+        else:
+            end_index = midpoint_index
+    return False
+
 
 ### -- OUTPUTS
 if __name__ == "__main__":
@@ -85,6 +112,6 @@ if __name__ == "__main__":
     dHeros, mHeros = sortFranchise(rawArr)
     insertionSort(dHeros)
     insertionSort(mHeros)
-    print(dHeros)
-    print(mHeros)
+    while True:
+        askHero(dHeros, mHeros)
 
