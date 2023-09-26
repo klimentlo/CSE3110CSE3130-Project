@@ -17,25 +17,24 @@ def askHero(DHEROS, MHEROS):
     asks the user what hero data they want
     :return: (str)
     '''
-    reask = True
-    while reask == True:
+    notFound = True
+    while notFound:
         try:
             hero = input("What is the superhero ID? ")
             hero = hero.upper() # uppercases the letter just in case they didn't
-            if hero[0] == "M":
+            if hero[0] == "M" and len(hero) == 4: # if they want to search marvel hero, and inputted correctly lengthed id
+                hero = hero[1:] #cut off the letter, only keeping numbers
+                notFound, heroData = binarySearch(MHEROS, hero) # search for the the id in list that only has marvel characters
+            elif hero[0] == "D" and len(hero) == 4:
                 hero = hero[1:]
-                print("what")
-                reask = binarySearch(MHEROS, hero)
-                print(reask)
-            elif hero[0] == "D":
-                hero = hero[1:]
-                reask = binarySearch(DHEROS, hero)
-                print("nice")
-            else:
-                print("Entry is invalid! ")
+                notFound, heroData = binarySearch(DHEROS, hero)
+
+            if notFound == False:  # if an id match was found
+                return heroData  # return the data to be outputted
+            else:  # if not found
+                print("Entry is invalid!! ")
         except IndexError:
             print("Entry is invalid! ")
-
     return
 
 
@@ -95,23 +94,36 @@ def binarySearch(LIST, VALUE):  # Iterative
 
     start_index = 0
     end_index = len(LIST) - 1
-    while start_index <= end_index:
-        midpoint_index = (start_index + end_index) // 2
-        if LIST[midpoint_index][0][1:] == VALUE: # if the numbers behind the
-            return True
-        elif VALUE > LIST[midpoint_index][0][1:]:
-            start_index = midpoint_index + 1
+    while start_index <= end_index: # when
+        midpoint_index = (start_index + end_index) // 2 # gets the index thats in the exact middle of the list
+        if LIST[midpoint_index][0][1:] == VALUE: # if number so happens to be in the middle of the list and matches the value wanted
+            return False, LIST[midpoint_index] #tells the program the data was found, then returns the hero's data
+        elif VALUE > LIST[midpoint_index][0][1:]: # however, if the value wanted is larger than the middle index number
+            start_index = midpoint_index + 1 # make the new start index this current index
         else:
-            end_index = midpoint_index
-    return False
+            end_index = midpoint_index # if it was actually smaller than the middle index, the end-index now becomes the middle index
 
+    # if nothing matched
+    return True, "none" # notFound = True, so it reruns and asks the question again
 
 ### -- OUTPUTS
+def displayInfo(HEADER, DATA):
+    '''
+    displays the hero data nicely
+    :param HEADER: is the categories of the thingy
+    :param DATA: the hero data
+    :return: none
+    '''
+    print(f"""
+    """)
+
+
 if __name__ == "__main__":
     rawArr, headers = getRawData('comicBookCharData_mixed.csv') # extracts the daa from the code
     dHeros, mHeros = sortFranchise(rawArr)
     insertionSort(dHeros)
     insertionSort(mHeros)
     while True:
-        askHero(dHeros, mHeros)
+        heroData = askHero(dHeros, mHeros)
+        displayInfo(headers, heroData)
 
