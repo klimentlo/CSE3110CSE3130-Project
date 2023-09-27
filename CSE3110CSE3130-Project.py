@@ -12,6 +12,29 @@ date:2023/09/20
 
 
 ### -- INPUTS
+def menu():
+    '''
+    allows the user to select what they wanna do
+    :return:
+    '''
+
+    choice = input("""
+What would you like to do?
+1. Search for Hero data
+2. View past searches
+3. Exit
+
+> """)
+    if choice.isnumeric():
+        choice = int(choice)
+    else:
+        print("Invalid input! ")
+        return
+    if choice > 0 and choice < 4:
+        return choice
+    else:
+        print("Invalid input! ")
+
 def askHero(DHEROS, MHEROS):
     '''
     asks the user what hero data they want
@@ -20,7 +43,8 @@ def askHero(DHEROS, MHEROS):
     notFound = True
     while notFound:
         try:
-            hero = input("What is the superhero ID? ")
+            hero = input("""What is the superhero ID? 
+> """)
             hero = hero.upper() # uppercases the letter just in case they didn't
             if hero[0] == "M" and len(hero) == 4: # if they want to search marvel hero, and inputted correctly lengthed id
                 hero = hero[1:] #cut off the letter, only keeping numbers
@@ -114,8 +138,23 @@ def displayInfo(HEADER, DATA):
     :param DATA: the hero data
     :return: none
     '''
-    print(f"""
-    """)
+    for i in range(len(DATA)):
+        if DATA[i] == "":
+            DATA[i] = "N/A"
+    pause = input(f"""
+{HEADER[0]}: {DATA[0]}
+{HEADER[1]}: {DATA[1]}
+{HEADER[2]}: {DATA[2]}
+{HEADER[3]}: {DATA[3]}
+{HEADER[4]}: {DATA[4]}
+{HEADER[5]}: {DATA[5]}
+{HEADER[6]}: {DATA[6]}
+{HEADER[7]}: {DATA[7]}
+{HEADER[8]}: {DATA[8]}
+{HEADER[9]}: {DATA[9]}
+{HEADER[10]}: {DATA[10]} 
+Press any key to return to menu
+""")
 
 
 if __name__ == "__main__":
@@ -124,6 +163,13 @@ if __name__ == "__main__":
     insertionSort(dHeros)
     insertionSort(mHeros)
     while True:
-        heroData = askHero(dHeros, mHeros)
-        displayInfo(headers, heroData)
+        choice = menu()
+        if choice == 1:
+            heroData = askHero(dHeros, mHeros)
+            displayInfo(headers, heroData)
+
+        if choice == 2:
+            pass
+        if choice == 3:
+            exit()
 
