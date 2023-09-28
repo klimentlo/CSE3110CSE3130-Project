@@ -6,11 +6,6 @@ author: kliment lo
 date:2023/09/20
 '''
 
-
-
-
-
-
 ### -- INPUTS
 def menu():
     '''
@@ -38,8 +33,12 @@ What would you like to do?
 def askHero(DHEROS, MHEROS):
     '''
     asks the user what hero data they want
+    :param DHEROS: (list)
+    :param MHEROS: (list)
     :return: (str)
     '''
+    from datetime import datetime
+    time = datetime.now()
     notFound = True
     while notFound:
         try:
@@ -54,12 +53,11 @@ def askHero(DHEROS, MHEROS):
                 notFound, heroData = binarySearch(DHEROS, hero)
 
             if notFound == False:  # if an id match was found
-                return heroData  # return the data to be outputted
+                return heroData, str(time)  # return the data to be outputted
             else:  # if not found
                 print("Entry is invalid!! ")
         except IndexError:
             print("Entry is invalid! ")
-    return
 
 
 ### -- PROCESSING
@@ -79,14 +77,28 @@ def sortFranchise(LIST):
     return dHeros, mHeros
 
 def getRawData(fileName):
+    '''
+    reads the files and returns the information
+    :param fileName: str
+    :return: array
+    '''
     import csv
     tempLi = []
-    file = open(fileName)
-    text = csv.reader(file)
-    for line in text:
-        tempLi.append(line)
-    var = tempLi.pop(0)
-    return tempLi, var
+    if fileName == "searchHistory.csv":
+        try:
+            file = open(fileName, "x")  # try to create file
+            file.close() # always close files once done extracting info
+        except FileExistsError:
+            pass # do nothing
+    file = open(fileName) #opens desired file
+    text = csv.reader(file) #currently: text = <_csv.reader object at 0x0000028383877C40>
+    for line in text: # actually extracts the information in said file. (for every line in this text file, append that line.)
+        tempLi.append(line) #appends it
+    if fileName == "searchHistory.csv": # if its the search history
+        return tempLi # return it
+    else: #if its the characterData
+        var = tempLi.pop(0) # pop the category thingy
+        return tempLi, var #return them
 
 # rawArr is a 2D arrays holding all the Superhero data
 # headers is a variable that holds the List of all the column headers.
@@ -130,6 +142,28 @@ def binarySearch(LIST, VALUE):  # Iterative
     # if nothing matched
     return True, "none" # notFound = True, so it reruns and asks the question again
 
+def trackHistory(data, history, time):
+    '''
+    tracks the search history of the user
+    :param data: (list)
+    :param history: (list)
+    :param time: (str)
+    :return: none
+    '''
+    data.append(time)
+    pause = input(f"Time: {data}")
+    historyList = []
+    for i in range(len(history)): # for the length of old history path
+        historyList.append(history[i]) # append all of it into the historyList
+    historyList.append(data) # append the new history into that list of history
+    print(historyList)
+    FILE = open("searchHistory.csv", "w") # puts it into write mode
+    for i in range(len(historyList)): # for the length of total history
+        historyList[i] = ",".join(historyList[i]) + "\n" # join the commas, then add a line break
+        FILE.write(historyList[i]) # write it into the file
+    FILE.close() # once done, close the file
+
+
 ### -- OUTPUTS
 def displayInfo(HEADER, DATA):
     '''
@@ -156,6 +190,29 @@ def displayInfo(HEADER, DATA):
 Press any key to return to menu
 """)
 
+def displayHistory(HEADER, HISTORY):
+    '''
+    displays past history nicely
+    :param HISTORY: (array)
+    :return: (none)
+    '''
+
+    for i in range(len(HISTORY)):
+        print(f"""
+--------------------------------------------
+Time of Search: {HISTORY[i][11]}
+{HEADER[0]}: {HISTORY[i][0]}
+{HEADER[1]}: {HISTORY[i][1]}
+{HEADER[2]}: {HISTORY[i][2]}
+{HEADER[3]}: {HISTORY[i][3]}
+{HEADER[4]}: {HISTORY[i][4]}
+{HEADER[5]}: {HISTORY[i][5]}
+{HEADER[6]}: {HISTORY[i][6]}
+{HEADER[7]}: {HISTORY[i][7]}
+{HEADER[8]}: {HISTORY[i][8]}
+{HEADER[9]}: {HISTORY[i][9]}
+{HEADER[10]}: {HISTORY[i][10]} 
+--------------------------------------------""")
 
 if __name__ == "__main__":
     rawArr, headers = getRawData('comicBookCharData_mixed.csv') # extracts the daa from the code
@@ -163,13 +220,15 @@ if __name__ == "__main__":
     insertionSort(dHeros)
     insertionSort(mHeros)
     while True:
+        searchHistory = getRawData('searchHistory.csv') # needs to be in loop so it updates the search history file/data
         choice = menu()
-        if choice == 1:
-            heroData = askHero(dHeros, mHeros)
-            displayInfo(headers, heroData)
 
+        if choice == 1:
+            heroData, time = askHero(dHeros, mHeros)
+            trackHistory(heroData, searchHistory, time)
+            displayInfo(headers, heroData)
         if choice == 2:
-            pass
+            displayHistory(headers,searchHistory)
         if choice == 3:
             exit()
 
