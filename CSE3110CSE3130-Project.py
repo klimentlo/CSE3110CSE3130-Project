@@ -64,7 +64,7 @@ def askHero(DHEROS, MHEROS):
 ### -- PROCESSING
 def sortFranchise(LIST):
     '''
-    sorts the heros from either in dc or marvel
+    sorts the heros from either in dc or marvel in its wanted list
     :return: list -> sorted
     '''
     dHeros = []
