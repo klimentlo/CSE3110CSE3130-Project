@@ -14,6 +14,7 @@ def menu():
     '''
 
     choice = input("""
+    
 What would you like to do?
 1. Search for Hero data
 2. View past searches
@@ -55,7 +56,7 @@ def askHero(DHEROS, MHEROS):
             if notFound == False:  # if an id match was found
                 return heroData, str(time)  # return the data to be outputted
             else:  # if not found
-                print("Entry is invalid!! ")
+                print("Entry is invalid! ")
         except IndexError:
             print("Entry is invalid! ")
 
@@ -151,12 +152,10 @@ def trackHistory(data, history, time):
     :return: none
     '''
     data.append(time)
-    pause = input(f"Time: {data}")
     historyList = []
     for i in range(len(history)): # for the length of old history path
         historyList.append(history[i]) # append all of it into the historyList
     historyList.append(data) # append the new history into that list of history
-    print(historyList)
     FILE = open("searchHistory.csv", "w") # puts it into write mode
     for i in range(len(historyList)): # for the length of total history
         historyList[i] = ",".join(historyList[i]) + "\n" # join the commas, then add a line break
@@ -187,8 +186,8 @@ def displayInfo(HEADER, DATA):
 {HEADER[8]}: {DATA[8]}
 {HEADER[9]}: {DATA[9]}
 {HEADER[10]}: {DATA[10]} 
-Press any key to return to menu
-""")
+
+Press enter to return to menu""")
 
 def displayHistory(HEADER, HISTORY):
     '''
@@ -196,9 +195,13 @@ def displayHistory(HEADER, HISTORY):
     :param HISTORY: (array)
     :return: (none)
     '''
-
+    if len(HISTORY) == 0:
+        print("""
+There is currently no past searches! """)
+        return
     for i in range(len(HISTORY)):
-        print(f"""
+        if len(HISTORY[i]) == 12:
+            print(f"""
 --------------------------------------------
 Time of Search: {HISTORY[i][11]}
 {HEADER[0]}: {HISTORY[i][0]}
@@ -213,6 +216,34 @@ Time of Search: {HISTORY[i][11]}
 {HEADER[9]}: {HISTORY[i][9]}
 {HEADER[10]}: {HISTORY[i][10]} 
 --------------------------------------------""")
+        else: #The way the contents are saved into the search history file, dates such as "October, 1928" are split into two seperate sections as it cuts off the coma
+            print(f"""
+--------------------------------------------
+Time of Search: {HISTORY[i][12]}
+{HEADER[0]}: {HISTORY[i][0]}
+{HEADER[1]}: {HISTORY[i][1]}
+{HEADER[2]}: {HISTORY[i][2]}
+{HEADER[3]}: {HISTORY[i][3]}
+{HEADER[4]}: {HISTORY[i][4]}
+{HEADER[5]}: {HISTORY[i][5]}
+{HEADER[6]}: {HISTORY[i][6]}
+{HEADER[7]}: {HISTORY[i][7]}
+{HEADER[8]}: {HISTORY[i][8]},{HISTORY[i][9]} 
+{HEADER[9]}: {HISTORY[i][10]}
+{HEADER[10]}: {HISTORY[i][11]} 
+--------------------------------------------""")
+    clear = input("""
+Press enter to return to menu. If you would like to clear your search history, type 'Clear All'
+> """)
+    clear = clear.upper()
+    if clear == "CLEAR ALL":
+        file = open("searchHistory.csv", "w") #opens the file that stores all search history, making it so when you write something it overrides everything in the file currently
+        file.write("") # writes nothing
+        file.close()
+        print("""
+History cleared successfully! """)
+    else:
+        pass
 
 if __name__ == "__main__":
     rawArr, headers = getRawData('comicBookCharData_mixed.csv') # extracts the daa from the code
@@ -222,11 +253,10 @@ if __name__ == "__main__":
     while True:
         searchHistory = getRawData('searchHistory.csv') # needs to be in loop so it updates the search history file/data
         choice = menu()
-
         if choice == 1:
             heroData, time = askHero(dHeros, mHeros)
-            trackHistory(heroData, searchHistory, time)
             displayInfo(headers, heroData)
+            trackHistory(heroData, searchHistory, time)
         if choice == 2:
             displayHistory(headers,searchHistory)
         if choice == 3:
