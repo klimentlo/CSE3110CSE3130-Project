@@ -59,20 +59,20 @@ def askHero(DHEROS, MHEROS):
 
 
 ### -- PROCESSING
-def sortFranchise(LIST):
+def sortFranchise(LIST, START_INDEX, DHEROS, MHEROS):
     '''
     sorts the heros from either in dc or marvel!
     :return: list -> sorted
     '''
-    dHeros = []
-    mHeros = []
-    for i in range(len(LIST)):
-        if LIST[i][0][0][0] == "D":
-            dHeros.append(LIST[i])
-        else:
-            mHeros.append(LIST[i])
 
-    return dHeros, mHeros
+    if LIST[START_INDEX][0][0] == "D":
+        DHEROS.append(LIST[START_INDEX])
+    else:
+        MHEROS.append(LIST[START_INDEX])
+    if START_INDEX == len(LIST) - 1:
+        return DHEROS, MHEROS
+    else:
+        return sortFranchise(LIST, START_INDEX+1,DHEROS, MHEROS)
 
 def getRawData(fileName):
     '''
@@ -171,7 +171,7 @@ def binarySearch (LIST, VALUE):
         else:
             return binarySearch(LIST[MIDPOINT_INDEX+1:], VALUE)
 
-def trackHistory(data, history, time):
+def trackHistory(data, history, time, INDEX1, INDEX2):
     '''
     tracks the search history of the user
     :param data: (list)
@@ -181,27 +181,31 @@ def trackHistory(data, history, time):
     '''
     data.append(time)
     historyList = []
-    for i in range(len(history)): # for the length of old history path
-        historyList.append(history[i]) # append all of it into the historyList
+    if INDEX1 != len(historyList):
+        historyList.append(history[INDEX1]) # append all of it into the historyList
+        return trackHistory(data, history, time, INDEX1+1,INDEX2)
     historyList.append(data) # append the new history into that list of history
     FILE = open("searchHistory.csv", "w") # puts it into write mode
-    for i in range(len(historyList)): # for the length of total history
-        historyList[i] = ",".join(historyList[i]) + "\n" # join the commas, then add a line break
-        FILE.write(historyList[i]) # write it into the file
+    if INDEX2 != len(historyList): # for the length of total history
+        historyList[INDEX2] = ",".join(historyList[INDEX2]) + "\n" # join the commas, then add a line break
+        FILE.write(historyList[INDEX2]) # write it into the file
+        return trackHistory(data, history, time, INDEX1, INDEX2+1)
     FILE.close() # once done, close the file
 
 
 ### -- OUTPUTS
-def displayInfo(HEADER, DATA):
+def displayInfo(HEADER, DATA, INDEX):
     '''
     displays the hero data nicely
     :param HEADER: is the categories of the thingy
     :param DATA: the hero data
     :return: none
     '''
-    for i in range(len(DATA)):
-        if DATA[i] == "":
-            DATA[i] = "N/A"
+    if INDEX != len(DATA)-1:
+        if DATA[INDEX] == "":
+            DATA[INDEX] = "N/A"
+        return displayInfo(HEADER,DATA,INDEX+1)
+    print(INDEX)
     pause = input(f"""
 {HEADER[0]}: {DATA[0]}
 {HEADER[1]}: {DATA[1]}
@@ -217,7 +221,7 @@ def displayInfo(HEADER, DATA):
 
 Press enter to return to menu""")
 
-def displayHistory(HEADER, HISTORY):
+def displayHistory(HEADER, HISTORY, INDEX):
     '''
     displays past history nicely
     :param HISTORY: (array)
@@ -227,39 +231,41 @@ def displayHistory(HEADER, HISTORY):
         print("""
 There is currently no past searches! """)
         return
-    for i in range(len(HISTORY)):
-        if len(HISTORY[i]) == 12:
+    if INDEX != len(HISTORY):
+        if len(HISTORY[INDEX]) == 12:
             print(f"""
 --------------------------------------------
-Time of Search: {HISTORY[i][11]}
-{HEADER[0]}: {HISTORY[i][0]}
-{HEADER[1]}: {HISTORY[i][1]}
-{HEADER[2]}: {HISTORY[i][2]}
-{HEADER[3]}: {HISTORY[i][3]}
-{HEADER[4]}: {HISTORY[i][4]}
-{HEADER[5]}: {HISTORY[i][5]}
-{HEADER[6]}: {HISTORY[i][6]}
-{HEADER[7]}: {HISTORY[i][7]}
-{HEADER[8]}: {HISTORY[i][8]}
-{HEADER[9]}: {HISTORY[i][9]}
-{HEADER[10]}: {HISTORY[i][10]} 
+Time of Search: {HISTORY[INDEX][11]}
+{HEADER[0]}: {HISTORY[INDEX][0]}
+{HEADER[1]}: {HISTORY[INDEX][1]}
+{HEADER[2]}: {HISTORY[INDEX][2]}
+{HEADER[3]}: {HISTORY[INDEX][3]}
+{HEADER[4]}: {HISTORY[INDEX][4]}
+{HEADER[5]}: {HISTORY[INDEX][5]}
+{HEADER[6]}: {HISTORY[INDEX][6]}
+{HEADER[7]}: {HISTORY[INDEX][7]}
+{HEADER[8]}: {HISTORY[INDEX][8]}
+{HEADER[9]}: {HISTORY[INDEX][9]}
+{HEADER[10]}: {HISTORY[INDEX][10]} 
 --------------------------------------------""")
         else: #The way the contents are saved into the search history file, dates such as "October, 1928" are split into two seperate sections as it cuts off the coma
             print(f"""
 --------------------------------------------
-Time of Search: {HISTORY[i][12]}
-{HEADER[0]}: {HISTORY[i][0]}
-{HEADER[1]}: {HISTORY[i][1]}
-{HEADER[2]}: {HISTORY[i][2]}
-{HEADER[3]}: {HISTORY[i][3]}
-{HEADER[4]}: {HISTORY[i][4]}
-{HEADER[5]}: {HISTORY[i][5]}
-{HEADER[6]}: {HISTORY[i][6]}
-{HEADER[7]}: {HISTORY[i][7]}
-{HEADER[8]}: {HISTORY[i][8]},{HISTORY[i][9]} 
-{HEADER[9]}: {HISTORY[i][10]}
-{HEADER[10]}: {HISTORY[i][11]} 
+Time of Search: {HISTORY[INDEX][12]}
+{HEADER[0]}: {HISTORY[INDEX][0]}
+{HEADER[1]}: {HISTORY[INDEX][1]}
+{HEADER[2]}: {HISTORY[INDEX][2]}
+{HEADER[3]}: {HISTORY[INDEX][3]}
+{HEADER[4]}: {HISTORY[INDEX][4]}
+{HEADER[5]}: {HISTORY[INDEX][5]}
+{HEADER[6]}: {HISTORY[INDEX][6]}
+{HEADER[7]}: {HISTORY[INDEX][7]}
+{HEADER[8]}: {HISTORY[INDEX][8]},{HISTORY[INDEX][9]} 
+{HEADER[9]}: {HISTORY[INDEX][10]}
+{HEADER[10]}: {HISTORY[INDEX][11]} 
 --------------------------------------------""")
+        return displayHistory(HEADER, HISTORY, INDEX+1)
+
     clear = input("""
 Press enter to return to menu. If you would like to clear your search history, type 'Clear All'
 > """)
@@ -275,7 +281,9 @@ History cleared successfully! """)
 
 if __name__ == "__main__":
     rawArr, headers = getRawData('comicBookCharData_mixed.csv') # extracts the daa from the code
-    dHeros, mHeros = sortFranchise(rawArr)
+    dHeros = []
+    mHeros = []
+    dHeros, mHeros = sortFranchise(rawArr, 0, dHeros, mHeros)
     heapSort(dHeros)
     heapSort(mHeros)
     while True:
@@ -283,10 +291,10 @@ if __name__ == "__main__":
         choice = menu()
         if choice == 1:
             heroData, time = askHero(dHeros, mHeros)
-            displayInfo(headers, heroData)
-            trackHistory(heroData, searchHistory, time)
+            displayInfo(headers, heroData, 0)
+            trackHistory(heroData, searchHistory, time, 0, 0)
         if choice == 2:
-            displayHistory(headers,searchHistory)
+            displayHistory(headers,searchHistory, 0)
         if choice == 3:
             exit()
 
