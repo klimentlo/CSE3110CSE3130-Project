@@ -179,7 +179,7 @@ def binarySearch(LIST, VALUE):
             return binarySearch(LIST[MIDPOINT_INDEX + 1:], VALUE)
 
 
-def trackHistory(historyList, data, history, time, INDEX1, INDEX2):
+def trackHistory(historyList, data, history, INDEX1, INDEX2):
     '''
     tracks the search history of the user
     :param data: (list)
@@ -187,21 +187,19 @@ def trackHistory(historyList, data, history, time, INDEX1, INDEX2):
     :param time: (str)
     :return: none
     '''
-    data.append(time)
+
     if INDEX1 < len(history):
         historyList.append(history[INDEX1])  # append all of it into the historyList
-        return trackHistory(historyList, data, history, time, INDEX1 + 1, INDEX2)
+        return trackHistory(historyList, data, history, INDEX1 + 1, INDEX2)
     elif INDEX1 == len(history): # if it is equal
         historyList.append(data)  # append the new history into that list of history
-        return trackHistory(historyList, data, history, time, INDEX1 + 1, INDEX2)
+        return trackHistory(historyList, data, history, INDEX1 + 1, INDEX2)
     FILE = open("searchHistory.csv", "w")  # puts it into write mode
-    print(historyList)
-    if INDEX2 != len(historyList):  # for the length of total history
-        pause = input(f"What should be written: {historyList[INDEX2]}")
+    if INDEX2 < len(historyList):  # for the length of total history
         historyList[INDEX2] = ",".join(historyList[INDEX2]) + "\n"  # join the commas, then add a line break
         FILE.write(historyList[INDEX2])  # write it into the file
-        pause = input(f"What is being written: {historyList[INDEX2]}")
-        return trackHistory(historyList, data, history, time, INDEX1, INDEX2 + 1)
+        print("written")
+        return trackHistory(historyList, data, history, INDEX1, INDEX2 + 1)
 
     FILE.close()  # once done, close the file
 
@@ -246,7 +244,6 @@ def displayHistory(HEADER, HISTORY, INDEX):
 There is currently no past searches! """)
         return
     if INDEX != len(HISTORY):
-        print(len(HISTORY[INDEX]))
         if len(HISTORY[INDEX]) == 12:
             print(f"""
 --------------------------------------------
@@ -311,7 +308,8 @@ if __name__ == "__main__":
             heroData, time = askHero(dHeros, mHeros)
             displayInfo(headers, heroData, 0)
             historyList = []
-            trackHistory(historyList, heroData, searchHistory, time, 0, 0)
+            heroData.append(time)
+            trackHistory(historyList, heroData, searchHistory, 0, 0)
         if choice == 2:
             displayHistory(headers, searchHistory, 0)
         if choice == 3:
