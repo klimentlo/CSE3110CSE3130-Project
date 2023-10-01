@@ -1,10 +1,11 @@
-#CSE3110CSE3130-Project
+# CSE3110CSE3130-Project
 
 '''
 title: Search and Sort Superheros
 author: kliment lo
 date:2023/09/20
 '''
+
 
 ### -- INPUTS
 def menu():
@@ -14,7 +15,7 @@ def menu():
     '''
 
     choice = input("""
-    
+
 What would you like to do?
 1. Search for Hero data
 2. View past searches
@@ -31,6 +32,7 @@ What would you like to do?
     else:
         print("Invalid input! ")
 
+
 def askHero(DHEROS, MHEROS):
     '''
     asks the user what hero data they want
@@ -44,10 +46,11 @@ def askHero(DHEROS, MHEROS):
     try:
         hero = input("""What is the superhero ID? 
 > """)
-        hero = hero.upper() # uppercases the letter just in case they didn't
-        if hero[0] == "M" and len(hero) == 4: # if they want to search marvel hero, and inputted correctly lengthed id
-            hero = hero[1:] #cut off the letter, only keeping numbers
-            found, heroData = binarySearch(MHEROS, hero) # search for the the id in list that only has marvel characters
+        hero = hero.upper()  # uppercases the letter just in case they didn't
+        if hero[0] == "M" and len(hero) == 4:  # if they want to search marvel hero, and inputted correctly lengthed id
+            hero = hero[1:]  # cut off the letter, only keeping numbers
+            found, heroData = binarySearch(MHEROS,
+                                           hero)  # search for the the id in list that only has marvel characters
         elif hero[0] == "D" and len(hero) == 4:
             hero = hero[1:]
             found, heroData = binarySearch(DHEROS, hero)
@@ -75,7 +78,8 @@ def sortFranchise(LIST, START_INDEX, DHEROS, MHEROS):
     if START_INDEX == len(LIST) - 1:
         return DHEROS, MHEROS
     else:
-        return sortFranchise(LIST, START_INDEX+1,DHEROS, MHEROS)
+        return sortFranchise(LIST, START_INDEX + 1, DHEROS, MHEROS)
+
 
 def getRawData(fileName):
     '''
@@ -88,18 +92,19 @@ def getRawData(fileName):
     if fileName == "searchHistory.csv":
         try:
             file = open(fileName, "x")  # try to create file
-            file.close() # always close files once done extracting info
+            file.close()  # always close files once done extracting info
         except FileExistsError:
-            pass # do nothing
-    file = open(fileName) #opens desired file
-    text = csv.reader(file) #currently: text = <_csv.reader object at 0x0000028383877C40>
-    for line in text: # actually extracts the information in said file. (for every line in this text file, append that line.)
-        tempLi.append(line) #appends it
-    if fileName == "searchHistory.csv": # if its the search history
-        return tempLi # return it
-    else: #if its the characterData
-        var = tempLi.pop(0) # pop the category thingy
-        return tempLi, var #return them
+            pass  # do nothing
+    file = open(fileName)  # opens desired file
+    text = csv.reader(file)  # currently: text = <_csv.reader object at 0x0000028383877C40>
+    for line in text:  # actually extracts the information in said file. (for every line in this text file, append that line.)
+        tempLi.append(line)  # appends it
+    if fileName == "searchHistory.csv":  # if its the search history
+        return tempLi  # return it
+    else:  # if its the characterData
+        var = tempLi.pop(0)  # pop the category thingy
+        return tempLi, var  # return them
+
 
 # rawArr is a 2D arrays holding all the Superhero data
 # headers is a variable that holds the List of all the column headers.
@@ -122,7 +127,7 @@ def heapify(LIST, LEN_ARRAY, ROOT_INDEX):
     if LEFT_INDEX < LEN_ARRAY and LIST[ROOT_INDEX] < LIST[LEFT_INDEX]:
         LARGEST_INDEX = LEFT_INDEX
 
-    #Test if right child v alue is larger than the largest index value.
+    # Test if right child v alue is larger than the largest index value.
     if RIGHT_INDEX < LEN_ARRAY and LIST[LARGEST_INDEX] < LIST[RIGHT_INDEX]:
         LARGEST_INDEX = RIGHT_INDEX
 
@@ -132,8 +137,9 @@ def heapify(LIST, LEN_ARRAY, ROOT_INDEX):
         LIST[ROOT_INDEX] = LIST[LARGEST_INDEX]
         LIST[LARGEST_INDEX] = TEMP
 
-        #Heapify the Root
-        heapify(LIST,LEN_ARRAY, LARGEST_INDEX)
+        # Heapify the Root
+        heapify(LIST, LEN_ARRAY, LARGEST_INDEX)
+
 
 def heapSort(LIST):
     '''
@@ -144,37 +150,36 @@ def heapSort(LIST):
 
     LEN_ARRAY = len(LIST)
 
-    #build the max heap
-    for i in range(LEN_ARRAY, -1, -1): # from tail to head
+    # build the max heap
+    for i in range(LEN_ARRAY, -1, -1):  # from tail to head
         heapify(LIST, LEN_ARRAY, i)
 
-
-    #Extract the highest element
+    # Extract the highest element
     for i in range(LEN_ARRAY - 1, 0, -1):
-        LIST[i], LIST[0] = LIST[0], LIST[i] # swaps index zero with highest value in unsorted section
+        LIST[i], LIST[0] = LIST[0], LIST[i]  # swaps index zero with highest value in unsorted section
 
         heapify(LIST, i, 0)
 
 
-
-def binarySearch (LIST, VALUE):
+def binarySearch(LIST, VALUE):
     '''
     Search for a value within a list -recursive
     :param LIST: list(int)
     :param VALUE: (int)
     :return: (bool)
     '''
-    MIDPOINT_INDEX = len(LIST)//2
-    if LIST[MIDPOINT_INDEX][0][1:] == VALUE: # base case
+    MIDPOINT_INDEX = len(LIST) // 2
+    if LIST[MIDPOINT_INDEX][0][1:] == VALUE:  # base case
         return True, LIST[MIDPOINT_INDEX]
     else:
         # simplify the list and return the function ye
         if VALUE < LIST[MIDPOINT_INDEX][0][1:]:
             return binarySearch(LIST[:MIDPOINT_INDEX], VALUE)
         else:
-            return binarySearch(LIST[MIDPOINT_INDEX+1:], VALUE)
+            return binarySearch(LIST[MIDPOINT_INDEX + 1:], VALUE)
 
-def trackHistory(data, history, time, INDEX1, INDEX2):
+
+def trackHistory(historyList, data, history, time, INDEX1, INDEX2):
     '''
     tracks the search history of the user
     :param data: (list)
@@ -183,17 +188,22 @@ def trackHistory(data, history, time, INDEX1, INDEX2):
     :return: none
     '''
     data.append(time)
-    historyList = []
-    if INDEX1 != len(historyList):
-        historyList.append(history[INDEX1]) # append all of it into the historyList
-        return trackHistory(data, history, time, INDEX1+1,INDEX2)
-    historyList.append(data) # append the new history into that list of history
-    FILE = open("searchHistory.csv", "w") # puts it into write mode
-    if INDEX2 != len(historyList): # for the length of total history
-        historyList[INDEX2] = ",".join(historyList[INDEX2]) + "\n" # join the commas, then add a line break
-        FILE.write(historyList[INDEX2]) # write it into the file
-        return trackHistory(data, history, time, INDEX1, INDEX2+1)
-    FILE.close() # once done, close the file
+    if INDEX1 < len(history):
+        historyList.append(history[INDEX1])  # append all of it into the historyList
+        return trackHistory(historyList, data, history, time, INDEX1 + 1, INDEX2)
+    elif INDEX1 == len(history): # if it is equal
+        historyList.append(data)  # append the new history into that list of history
+        return trackHistory(historyList, data, history, time, INDEX1 + 1, INDEX2)
+    FILE = open("searchHistory.csv", "w")  # puts it into write mode
+    print(historyList)
+    if INDEX2 != len(historyList):  # for the length of total history
+        pause = input(f"What should be written: {historyList[INDEX2]}")
+        historyList[INDEX2] = ",".join(historyList[INDEX2]) + "\n"  # join the commas, then add a line break
+        FILE.write(historyList[INDEX2])  # write it into the file
+        pause = input(f"What is being written: {historyList[INDEX2]}")
+        return trackHistory(historyList, data, history, time, INDEX1, INDEX2 + 1)
+
+    FILE.close()  # once done, close the file
 
 
 ### -- OUTPUTS
@@ -204,10 +214,10 @@ def displayInfo(HEADER, DATA, INDEX):
     :param DATA: the hero data
     :return: none
     '''
-    if INDEX != len(DATA)-1:
+    if INDEX != len(DATA) - 1:
         if DATA[INDEX] == "":
             DATA[INDEX] = "N/A"
-        return displayInfo(HEADER,DATA,INDEX+1)
+        return displayInfo(HEADER, DATA, INDEX + 1)
     print(INDEX)
     pause = input(f"""
 {HEADER[0]}: {DATA[0]}
@@ -224,6 +234,7 @@ def displayInfo(HEADER, DATA, INDEX):
 
 Press enter to return to menu""")
 
+
 def displayHistory(HEADER, HISTORY, INDEX):
     '''
     displays past history nicely
@@ -235,6 +246,7 @@ def displayHistory(HEADER, HISTORY, INDEX):
 There is currently no past searches! """)
         return
     if INDEX != len(HISTORY):
+        print(len(HISTORY[INDEX]))
         if len(HISTORY[INDEX]) == 12:
             print(f"""
 --------------------------------------------
@@ -251,7 +263,7 @@ Time of Search: {HISTORY[INDEX][11]}
 {HEADER[9]}: {HISTORY[INDEX][9]}
 {HEADER[10]}: {HISTORY[INDEX][10]} 
 --------------------------------------------""")
-        else: #The way the contents are saved into the search history file, dates such as "October, 1928" are split into two seperate sections as it cuts off the coma
+        else:  # The way the contents are saved into the search history file, dates such as "October, 1928" are split into two seperate sections as it cuts off the coma
             print(f"""
 --------------------------------------------
 Time of Search: {HISTORY[INDEX][12]}
@@ -267,37 +279,40 @@ Time of Search: {HISTORY[INDEX][12]}
 {HEADER[9]}: {HISTORY[INDEX][10]}
 {HEADER[10]}: {HISTORY[INDEX][11]} 
 --------------------------------------------""")
-        return displayHistory(HEADER, HISTORY, INDEX+1)
+        return displayHistory(HEADER, HISTORY, INDEX + 1)
 
     clear = input("""
 Press enter to return to menu. If you would like to clear your search history, type 'Clear All'
 > """)
     clear = clear.upper()
     if clear == "CLEAR ALL":
-        file = open("searchHistory.csv", "w") #opens the file that stores all search history, making it so when you write something it overrides everything in the file currently
-        file.write("") # writes nothing
+        file = open("searchHistory.csv",
+                    "w")  # opens the file that stores all search history, making it so when you write something it overrides everything in the file currently
+        file.write("")  # writes nothing
         file.close()
         print("""
 History cleared successfully! """)
     else:
         pass
 
+
 if __name__ == "__main__":
-    rawArr, headers = getRawData('comicBookCharData_mixed.csv') # extracts the daa from the code
+    rawArr, headers = getRawData('comicBookCharData_mixed.csv')  # extracts the daa from the code
     dHeros = []
     mHeros = []
     dHeros, mHeros = sortFranchise(rawArr, 0, dHeros, mHeros)
     heapSort(dHeros)
     heapSort(mHeros)
     while True:
-        searchHistory = getRawData('searchHistory.csv') # needs to be in loop so it updates the search history file/data
+        searchHistory = getRawData(
+            'searchHistory.csv')  # needs to be in loop so it updates the search history file/data
         choice = menu()
         if choice == 1:
             heroData, time = askHero(dHeros, mHeros)
             displayInfo(headers, heroData, 0)
-            trackHistory(heroData, searchHistory, time, 0, 0)
+            historyList = []
+            trackHistory(historyList, heroData, searchHistory, time, 0, 0)
         if choice == 2:
-            displayHistory(headers,searchHistory, 0)
+            displayHistory(headers, searchHistory, 0)
         if choice == 3:
             exit()
-
