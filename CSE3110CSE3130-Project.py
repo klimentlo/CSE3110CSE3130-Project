@@ -40,6 +40,7 @@ def askHero(DHEROS, MHEROS):
     '''
     from datetime import datetime
     time = datetime.now()
+    found = False
     try:
         hero = input("""What is the superhero ID? 
 > """)
@@ -53,9 +54,11 @@ def askHero(DHEROS, MHEROS):
         if found:
             return heroData, str(time)  # return the data to be outputted
         else:
+            print("Entry is invalid!!!!")
             askHero(DHEROS, MHEROS)
     except IndexError:
         print("Entry is invalid! ")
+        askHero(DHEROS, MHEROS)
 
 
 ### -- PROCESSING
