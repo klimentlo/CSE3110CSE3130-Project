@@ -197,9 +197,10 @@ def trackHistory(historyList, data, history, INDEX1, INDEX2):
     FILE = open("searchHistory.csv", "w")  # puts it into write mode
     if INDEX2 < len(historyList):  # for the length of total history
         historyList[INDEX2] = ",".join(historyList[INDEX2]) + "\n"  # join the commas, then add a line break
-        FILE.write(historyList[INDEX2])  # write it into the file
-        print("written")
+        FILE.write(historyList[INDEX2])
         return trackHistory(historyList, data, history, INDEX1, INDEX2 + 1)
+    for i in range(len(historyList)):
+        FILE.write(historyList[i])  # write it into the file
 
     FILE.close()  # once done, close the file
 
@@ -216,7 +217,6 @@ def displayInfo(HEADER, DATA, INDEX):
         if DATA[INDEX] == "":
             DATA[INDEX] = "N/A"
         return displayInfo(HEADER, DATA, INDEX + 1)
-    print(INDEX)
     pause = input(f"""
 {HEADER[0]}: {DATA[0]}
 {HEADER[1]}: {DATA[1]}
