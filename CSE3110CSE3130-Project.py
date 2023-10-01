@@ -105,20 +105,42 @@ def getRawData(fileName):
 # headers is a variable that holds the List of all the column headers.
 
 
-def insertionSort(LIST):
+def quickSort(LIST, FIRST_INDEX, LAST_INDEX):
     '''
-    takes the lowest index of the unsorted section and placed it in the sorted section
-    :param LIST: list(int)
-    :return: (none)
+    assign the first value as the pivot and place it in its correct location
+    :param LIST: list(int) -> unsorted
+    :param FIRST_INDEX: (int)
+    :param LAST_INDEX: (int)
+    :return: none
     '''
-    # [ 3, 5, 7, 4, 9]
-    for i in range(1, len(LIST)):
-        UNSORTED_VALUE = LIST[i] # 4
-        HIGHEST_SORTED_INDEX = i - 1 # 7 (index 2)
-        while HIGHEST_SORTED_INDEX >= 0 and UNSORTED_VALUE < LIST[HIGHEST_SORTED_INDEX]: #
-            LIST[HIGHEST_SORTED_INDEX + 1 ] = LIST[HIGHEST_SORTED_INDEX] #
-            HIGHEST_SORTED_INDEX = HIGHEST_SORTED_INDEX - 1 #
-        LIST[HIGHEST_SORTED_INDEX + 1] = UNSORTED_VALUE
+
+    if FIRST_INDEX < LAST_INDEX: # test that the list is one or more
+        PIVOT_VALUE = LIST[FIRST_INDEX]
+        LEFT_INDEX = FIRST_INDEX + 1
+        RIGHT_INDEX = LAST_INDEX
+
+        DONE = False
+
+        while not DONE: #iterative component
+            while LEFT_INDEX <= RIGHT_INDEX and LIST[LEFT_INDEX] <= PIVOT_VALUE: #continues until finds value that is smaller than pivot and left index
+                LEFT_INDEX += 1
+
+            while RIGHT_INDEX >= LEFT_INDEX and LIST[RIGHT_INDEX] >= PIVOT_VALUE: # continues until
+                RIGHT_INDEX -= 1
+
+            if RIGHT_INDEX < LEFT_INDEX: # has the right index crossed over the left?
+                DONE = True # exits while loop
+            else:
+                TEMP = LIST[LEFT_INDEX]
+                LIST[LEFT_INDEX] = LIST[RIGHT_INDEX]
+                LIST[RIGHT_INDEX] = TEMP
+
+        TEMP = LIST[FIRST_INDEX]
+        LIST[FIRST_INDEX] = LIST[RIGHT_INDEX]
+        LIST[RIGHT_INDEX] = TEMP
+
+        quickSort(LIST, FIRST_INDEX, RIGHT_INDEX - 1)
+        quickSort(LIST, RIGHT_INDEX + 1, LAST_INDEX)
 
 
 def binarySearch(LIST, VALUE):  # Iterative
