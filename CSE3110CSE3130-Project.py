@@ -40,25 +40,22 @@ def askHero(DHEROS, MHEROS):
     '''
     from datetime import datetime
     time = datetime.now()
-    notFound = True
-    while notFound:
-        try:
-            hero = input("""What is the superhero ID? 
+    try:
+        hero = input("""What is the superhero ID? 
 > """)
-            hero = hero.upper() # uppercases the letter just in case they didn't
-            if hero[0] == "M" and len(hero) == 4: # if they want to search marvel hero, and inputted correctly lengthed id
-                hero = hero[1:] #cut off the letter, only keeping numbers
-                notFound, heroData = binarySearch(MHEROS, hero) # search for the the id in list that only has marvel characters
-            elif hero[0] == "D" and len(hero) == 4:
-                hero = hero[1:]
-                notFound, heroData = binarySearch(DHEROS, hero)
-
-            if notFound == False:  # if an id match was found
-                return heroData, str(time)  # return the data to be outputted
-            else:  # if not found
-                print("Entry is invalid! ")
-        except IndexError:
-            print("Entry is invalid! ")
+        hero = hero.upper() # uppercases the letter just in case they didn't
+        if hero[0] == "M" and len(hero) == 4: # if they want to search marvel hero, and inputted correctly lengthed id
+            hero = hero[1:] #cut off the letter, only keeping numbers
+            found, heroData = binarySearch(MHEROS, hero) # search for the the id in list that only has marvel characters
+        elif hero[0] == "D" and len(hero) == 4:
+            hero = hero[1:]
+            found, heroData = binarySearch(DHEROS, hero)
+        if found:
+            return heroData, str(time)  # return the data to be outputted
+        else:
+            askHero(DHEROS, MHEROS)
+    except IndexError:
+        print("Entry is invalid! ")
 
 
 ### -- PROCESSING
@@ -164,13 +161,12 @@ def binarySearch (LIST, VALUE):
     :param VALUE: (int)
     :return: (bool)
     '''
-
     MIDPOINT_INDEX = len(LIST)//2
-    if LIST[MIDPOINT_INDEX] == VALUE: # base case
-        return True
+    if LIST[MIDPOINT_INDEX][0][1:] == VALUE: # base case
+        return True, LIST[MIDPOINT_INDEX]
     else:
         # simplify the list and return the function ye
-        if VALUE < LIST[MIDPOINT_INDEX]:
+        if VALUE < LIST[MIDPOINT_INDEX][0][1:]:
             return binarySearch(LIST[:MIDPOINT_INDEX], VALUE)
         else:
             return binarySearch(LIST[MIDPOINT_INDEX+1:], VALUE)
@@ -280,8 +276,8 @@ History cleared successfully! """)
 if __name__ == "__main__":
     rawArr, headers = getRawData('comicBookCharData_mixed.csv') # extracts the daa from the code
     dHeros, mHeros = sortFranchise(rawArr)
-    insertionSort(dHeros)
-    insertionSort(mHeros)
+    heapSort(dHeros)
+    heapSort(mHeros)
     while True:
         searchHistory = getRawData('searchHistory.csv') # needs to be in loop so it updates the search history file/data
         choice = menu()
