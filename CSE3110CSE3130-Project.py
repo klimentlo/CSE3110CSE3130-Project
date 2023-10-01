@@ -105,65 +105,75 @@ def getRawData(fileName):
 # headers is a variable that holds the List of all the column headers.
 
 
-def quickSort(LIST, FIRST_INDEX, LAST_INDEX):
+def heapify(LIST, LEN_ARRAY, ROOT_INDEX):
     '''
-    assign the first value as the pivot and place it in its correct location
-    :param LIST: list(int) -> unsorted
-    :param FIRST_INDEX: (int)
-    :param LAST_INDEX: (int)
+    Heapifies all subtreesin the binary tree
+    :param LIST: list(int)
+    :param LEN_ARRAY: int
+    :param ROOT_INDEX: int -> parent index
+    :return:
+    '''
+
+    LARGEST_INDEX = ROOT_INDEX
+    LEFT_INDEX = 2 * ROOT_INDEX + 1
+    RIGHT_INDEX = 2 * ROOT_INDEX + 2
+
+    # Test if left child is larger than the largest index value
+    if LEFT_INDEX < LEN_ARRAY and LIST[ROOT_INDEX] < LIST[LEFT_INDEX]:
+        LARGEST_INDEX = LEFT_INDEX
+
+    #Test if right child v alue is larger than the largest index value.
+    if RIGHT_INDEX < LEN_ARRAY and LIST[LARGEST_INDEX] < LIST[RIGHT_INDEX]:
+        LARGEST_INDEX = RIGHT_INDEX
+
+    # Change the ROOT/Parent if needed
+    if LARGEST_INDEX != ROOT_INDEX:
+        TEMP = LIST[ROOT_INDEX]
+        LIST[ROOT_INDEX] = LIST[LARGEST_INDEX]
+        LIST[LARGEST_INDEX] = TEMP
+
+        #Heapify the Root
+        heapify(LIST,LEN_ARRAY, LARGEST_INDEX)
+
+def heapSort(LIST):
+    '''
+    sorts the list
+    :param LIST: list(int) - >unsorted
     :return: none
     '''
 
-    if FIRST_INDEX < LAST_INDEX: # test that the list is one or more
-        PIVOT_VALUE = LIST[FIRST_INDEX]
-        LEFT_INDEX = FIRST_INDEX + 1
-        RIGHT_INDEX = LAST_INDEX
+    LEN_ARRAY = len(LIST)
 
-        DONE = False
-
-        while not DONE: #iterative component
-            while LEFT_INDEX <= RIGHT_INDEX and LIST[LEFT_INDEX] <= PIVOT_VALUE: #continues until finds value that is smaller than pivot and left index
-                LEFT_INDEX += 1
-
-            while RIGHT_INDEX >= LEFT_INDEX and LIST[RIGHT_INDEX] >= PIVOT_VALUE: # continues until
-                RIGHT_INDEX -= 1
-
-            if RIGHT_INDEX < LEFT_INDEX: # has the right index crossed over the left?
-                DONE = True # exits while loop
-            else:
-                TEMP = LIST[LEFT_INDEX]
-                LIST[LEFT_INDEX] = LIST[RIGHT_INDEX]
-                LIST[RIGHT_INDEX] = TEMP
-
-        TEMP = LIST[FIRST_INDEX]
-        LIST[FIRST_INDEX] = LIST[RIGHT_INDEX]
-        LIST[RIGHT_INDEX] = TEMP
-
-        quickSort(LIST, FIRST_INDEX, RIGHT_INDEX - 1)
-        quickSort(LIST, RIGHT_INDEX + 1, LAST_INDEX)
+    #build the max heap
+    for i in range(LEN_ARRAY, -1, -1): # from tail to head
+        heapify(LIST, LEN_ARRAY, i)
 
 
-def binarySearch(LIST, VALUE):  # Iterative
+    #Extract the highest element
+    for i in range(LEN_ARRAY - 1, 0, -1):
+        LIST[i], LIST[0] = LIST[0], LIST[i] # swaps index zero with highest value in unsorted section
+
+        heapify(LIST, i, 0)
+
+
+
+def binarySearch (LIST, VALUE):
     '''
-    Search for a value within a list
-    :param LIST: array (the List of values coming in is going to either be only D or only M)
-    :param VALUE: int (ex. 324)
+    Search for a value within a list -recursive
+    :param LIST: list(int)
+    :param VALUE: (int)
     :return: (bool)
     '''
 
-    start_index = 0
-    end_index = len(LIST) - 1
-    while start_index <= end_index: # when
-        midpoint_index = (start_index + end_index) // 2 # gets the index thats in the exact middle of the list
-        if LIST[midpoint_index][0][1:] == VALUE: # if number so happens to be in the middle of the list and matches the value wanted
-            return False, LIST[midpoint_index] #tells the program the data was found, then returns the hero's data
-        elif VALUE > LIST[midpoint_index][0][1:]: # however, if the value wanted is larger than the middle index number
-            start_index = midpoint_index + 1 # make the new start index this current index
+    MIDPOINT_INDEX = len(LIST)//2
+    if LIST[MIDPOINT_INDEX] == VALUE: # base case
+        return True
+    else:
+        # simplify the list and return the function ye
+        if VALUE < LIST[MIDPOINT_INDEX]:
+            return binarySearch(LIST[:MIDPOINT_INDEX], VALUE)
         else:
-            end_index = midpoint_index # if it was actually smaller than the middle index, the end-index now becomes the middle index
-
-    # if nothing matched
-    return True, "none" # notFound = True, so it reruns and asks the question again
+            return binarySearch(LIST[MIDPOINT_INDEX+1:], VALUE)
 
 def trackHistory(data, history, time):
     '''
