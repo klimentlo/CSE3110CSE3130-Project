@@ -300,17 +300,15 @@ if __name__ == "__main__":
     dHeros, mHeros = sortFranchise(rawArr, 0, dHeros, mHeros)
     heapSort(dHeros)
     heapSort(mHeros)
-    while True:
-        searchHistory = getRawData(
-            'searchHistory.csv')  # needs to be in loop so it updates the search history file/data
-        choice = menu()
-        if choice == 1:
-            heroData, time = askHero(dHeros, mHeros)
-            displayInfo(headers, heroData, 0)
-            historyList = []
-            heroData.append(time)
-            trackHistory(historyList, heroData, searchHistory, 0, 0)
-        if choice == 2:
-            displayHistory(headers, searchHistory, 0)
-        if choice == 3:
-            exit()
+    searchHistory = getRawData('searchHistory.csv')  # needs to be in loop so it updates the search history file/data
+    choice = menu()
+    if choice == 1:
+        heroData, time = askHero(dHeros, mHeros)
+        displayInfo(headers, heroData, 0)
+        historyList = []
+        heroData.append(time)
+        trackHistory(historyList, heroData, searchHistory, 0, 0)
+    if choice == 2:
+        displayHistory(headers, searchHistory, 0)
+    if choice == 3:
+        exit()
