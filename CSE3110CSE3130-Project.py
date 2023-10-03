@@ -5,7 +5,7 @@ title: Search and Sort Superheros
 author: kliment lo
 date:2023/09/20
 '''
-
+from datetime import datetime
 
 ### -- INPUTS
 def menu():
@@ -40,7 +40,7 @@ def askHero(DHEROS, MHEROS):
     :param MHEROS: (list)
     :return: (str)
     '''
-    from datetime import datetime
+
     time = datetime.now()
     found = False
     try:
