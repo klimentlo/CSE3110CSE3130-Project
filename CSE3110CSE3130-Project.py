@@ -58,10 +58,13 @@ def askHero(DHEROS, MHEROS):
             return heroData, str(time)  # return the data to be outputted
         else:
             print("Entry is invalid!!!!")
-            askHero(DHEROS, MHEROS)
+            data, time = askHero(DHEROS, MHEROS)
+            return data, time
+
     except IndexError:
         print("Entry is invalid! ")
-        askHero(DHEROS, MHEROS)
+        data, time = askHero(DHEROS, MHEROS)
+        return data, time
 
 
 ### -- PROCESSING
@@ -296,6 +299,7 @@ if __name__ == "__main__":
         choice = menu()
         if choice == 1:
             heroData, time = askHero(dHeros, mHeros)
+            print(time)
             displayInfo(headers, heroData)
             trackHistory(heroData, searchHistory, time)
         if choice == 2:
