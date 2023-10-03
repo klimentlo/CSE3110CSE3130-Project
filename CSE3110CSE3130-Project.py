@@ -206,17 +206,16 @@ def trackHistory(historyList, data, history, INDEX1, INDEX2):
 
 
 ### -- OUTPUTS
-def displayInfo(HEADER, DATA, INDEX):
+def displayInfo(HEADER, DATA):
     '''
     displays the hero data nicely
     :param HEADER: is the categories of the thingy
     :param DATA: the hero data
     :return: none
     '''
-    if INDEX != len(DATA) - 1:
-        if DATA[INDEX] == "":
-            DATA[INDEX] = "N/A"
-        return displayInfo(HEADER, DATA, INDEX + 1)
+    for i in range(len(DATA)):
+        if DATA[i] == "":
+            DATA[i] = "N/A"
     pause = input(f"""
 {HEADER[0]}: {DATA[0]}
 {HEADER[1]}: {DATA[1]}
@@ -231,7 +230,6 @@ def displayInfo(HEADER, DATA, INDEX):
 {HEADER[10]}: {DATA[10]} 
 
 Press enter to return to menu""")
-
 
 def displayHistory(HEADER, HISTORY, INDEX):
     '''
@@ -304,7 +302,7 @@ if __name__ == "__main__":
     choice = menu()
     if choice == 1:
         heroData, time = askHero(dHeros, mHeros)
-        displayInfo(headers, heroData, 0)
+        displayInfo(headers, heroData)
         historyList = []
         heroData.append(time)
         trackHistory(historyList, heroData, searchHistory, 0, 0)
