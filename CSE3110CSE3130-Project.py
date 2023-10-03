@@ -179,7 +179,7 @@ def binarySearch(LIST, VALUE):
             return binarySearch(LIST[MIDPOINT_INDEX + 1:], VALUE)
 
 
-def trackHistory(historyList, data, history, INDEX1, INDEX2):
+def trackHistory(data, history, time):
     '''
     tracks the search history of the user
     :param data: (list)
@@ -187,22 +187,16 @@ def trackHistory(historyList, data, history, INDEX1, INDEX2):
     :param time: (str)
     :return: none
     '''
-
-    if INDEX1 < len(history):
-        historyList.append(history[INDEX1])  # append all of it into the historyList
-        return trackHistory(historyList, data, history, INDEX1 + 1, INDEX2)
-    elif INDEX1 == len(history): # if it is equal
-        historyList.append(data)  # append the new history into that list of history
-        return trackHistory(historyList, data, history, INDEX1 + 1, INDEX2)
-    FILE = open("searchHistory.csv", "w")  # puts it into write mode
-    if INDEX2 < len(historyList):  # for the length of total history
-        historyList[INDEX2] = ",".join(historyList[INDEX2]) + "\n"  # join the commas, then add a line break
-        FILE.write(historyList[INDEX2])
-        return trackHistory(historyList, data, history, INDEX1, INDEX2 + 1)
-    for i in range(len(historyList)):
-        FILE.write(historyList[i])  # write it into the file
-
-    FILE.close()  # once done, close the file
+    data.append(time)
+    historyList = []
+    for i in range(len(history)): # for the length of old history path
+        historyList.append(history[i]) # append all of it into the historyList
+    historyList.append(data) # append the new history into that list of history
+    FILE = open("searchHistory.csv", "w") # puts it into write mode
+    for i in range(len(historyList)): # for the length of total history
+        historyList[i] = ",".join(historyList[i]) + "\n" # join the commas, then add a line break
+        FILE.write(historyList[i]) # write it into the file
+    FILE.close() # once done, close the file
 
 
 ### -- OUTPUTS
@@ -287,19 +281,7 @@ History cleared successfully! """)
     else:
         pass
 
-    clear = input("""
-Press enter to return to menu. If you would like to clear your search history, type 'Clear All'
-> """)
-    clear = clear.upper()
-    if clear == "CLEAR ALL":
-        file = open("searchHistory.csv",
-                    "w")  # opens the file that stores all search history, making it so when you write something it overrides everything in the file currently
-        file.write("")  # writes nothing
-        file.close()
-        print("""
-History cleared successfully! """)
-    else:
-        pass
+
 
 
 if __name__ == "__main__":
@@ -309,15 +291,14 @@ if __name__ == "__main__":
     dHeros, mHeros = sortFranchise(rawArr, 0, dHeros, mHeros)
     heapSort(dHeros)
     heapSort(mHeros)
-    searchHistory = getRawData('searchHistory.csv')  # needs to be in loop so it updates the search history file/data
-    choice = menu()
-    if choice == 1:
-        heroData, time = askHero(dHeros, mHeros)
-        displayInfo(headers, heroData)
-        historyList = []
-        heroData.append(time)
-        trackHistory(historyList, heroData, searchHistory )
-    if choice == 2:
-        displayHistory(headers, searchHistory)
-    if choice == 3:
-        exit()
+    while True:
+        searchHistory = getRawData('searchHistory.csv')  # needs to be in loop so it updates the search history file/data
+        choice = menu()
+        if choice == 1:
+            heroData, time = askHero(dHeros, mHeros)
+            displayInfo(headers, heroData)
+            trackHistory(heroData, searchHistory, time)
+        if choice == 2:
+            displayHistory(headers, searchHistory)
+        if choice == 3:
+            exit()
