@@ -231,7 +231,7 @@ def displayInfo(HEADER, DATA):
 
 Press enter to return to menu""")
 
-def displayHistory(HEADER, HISTORY, INDEX):
+def displayHistory(HEADER, HISTORY):
     '''
     displays past history nicely
     :param HISTORY: (array)
@@ -241,40 +241,51 @@ def displayHistory(HEADER, HISTORY, INDEX):
         print("""
 There is currently no past searches! """)
         return
-    if INDEX != len(HISTORY):
-        if len(HISTORY[INDEX]) == 12:
+    for i in range(len(HISTORY)):
+        if len(HISTORY[i]) == 12:
             print(f"""
 --------------------------------------------
-Time of Search: {HISTORY[INDEX][11]}
-{HEADER[0]}: {HISTORY[INDEX][0]}
-{HEADER[1]}: {HISTORY[INDEX][1]}
-{HEADER[2]}: {HISTORY[INDEX][2]}
-{HEADER[3]}: {HISTORY[INDEX][3]}
-{HEADER[4]}: {HISTORY[INDEX][4]}
-{HEADER[5]}: {HISTORY[INDEX][5]}
-{HEADER[6]}: {HISTORY[INDEX][6]}
-{HEADER[7]}: {HISTORY[INDEX][7]}
-{HEADER[8]}: {HISTORY[INDEX][8]}
-{HEADER[9]}: {HISTORY[INDEX][9]}
-{HEADER[10]}: {HISTORY[INDEX][10]} 
+Time of Search: {HISTORY[i][11]}
+{HEADER[0]}: {HISTORY[i][0]}
+{HEADER[1]}: {HISTORY[i][1]}
+{HEADER[2]}: {HISTORY[i][2]}
+{HEADER[3]}: {HISTORY[i][3]}
+{HEADER[4]}: {HISTORY[i][4]}
+{HEADER[5]}: {HISTORY[i][5]}
+{HEADER[6]}: {HISTORY[i][6]}
+{HEADER[7]}: {HISTORY[i][7]}
+{HEADER[8]}: {HISTORY[i][8]}
+{HEADER[9]}: {HISTORY[i][9]}
+{HEADER[10]}: {HISTORY[i][10]} 
 --------------------------------------------""")
-        else:  # The way the contents are saved into the search history file, dates such as "October, 1928" are split into two seperate sections as it cuts off the coma
+        else: #The way the contents are saved into the search history file, dates such as "October, 1928" are split into two seperate sections as it cuts off the coma
             print(f"""
 --------------------------------------------
-Time of Search: {HISTORY[INDEX][12]}
-{HEADER[0]}: {HISTORY[INDEX][0]}
-{HEADER[1]}: {HISTORY[INDEX][1]}
-{HEADER[2]}: {HISTORY[INDEX][2]}
-{HEADER[3]}: {HISTORY[INDEX][3]}
-{HEADER[4]}: {HISTORY[INDEX][4]}
-{HEADER[5]}: {HISTORY[INDEX][5]}
-{HEADER[6]}: {HISTORY[INDEX][6]}
-{HEADER[7]}: {HISTORY[INDEX][7]}
-{HEADER[8]}: {HISTORY[INDEX][8]},{HISTORY[INDEX][9]} 
-{HEADER[9]}: {HISTORY[INDEX][10]}
-{HEADER[10]}: {HISTORY[INDEX][11]} 
+Time of Search: {HISTORY[i][12]}
+{HEADER[0]}: {HISTORY[i][0]}
+{HEADER[1]}: {HISTORY[i][1]}
+{HEADER[2]}: {HISTORY[i][2]}
+{HEADER[3]}: {HISTORY[i][3]}
+{HEADER[4]}: {HISTORY[i][4]}
+{HEADER[5]}: {HISTORY[i][5]}
+{HEADER[6]}: {HISTORY[i][6]}
+{HEADER[7]}: {HISTORY[i][7]}
+{HEADER[8]}: {HISTORY[i][8]},{HISTORY[i][9]} 
+{HEADER[9]}: {HISTORY[i][10]}
+{HEADER[10]}: {HISTORY[i][11]} 
 --------------------------------------------""")
-        return displayHistory(HEADER, HISTORY, INDEX + 1)
+    clear = input("""
+Press enter to return to menu. If you would like to clear your search history, type 'Clear All'
+> """)
+    clear = clear.upper()
+    if clear == "CLEAR ALL":
+        file = open("searchHistory.csv", "w") #opens the file that stores all search history, making it so when you write something it overrides everything in the file currently
+        file.write("") # writes nothing
+        file.close()
+        print("""
+History cleared successfully! """)
+    else:
+        pass
 
     clear = input("""
 Press enter to return to menu. If you would like to clear your search history, type 'Clear All'
@@ -305,8 +316,8 @@ if __name__ == "__main__":
         displayInfo(headers, heroData)
         historyList = []
         heroData.append(time)
-        trackHistory(historyList, heroData, searchHistory, 0, 0)
+        trackHistory(historyList, heroData, searchHistory )
     if choice == 2:
-        displayHistory(headers, searchHistory, 0)
+        displayHistory(headers, searchHistory)
     if choice == 3:
         exit()
